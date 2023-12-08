@@ -43,18 +43,6 @@ class CNN:
         for layer in reversed(self.layers):
             current_gradient = layer.back_prop(current_gradient)
 
-    def iterate_mini_batches(self, data, labels, batch_size):
-        assert data.shape[0] == labels.shape[0]
-
-        if batch_size == len(data):
-            yield data, labels
-            return
-
-        for start_idx in range(0, data.shape[0], batch_size):
-            end_idx = min(start_idx + batch_size, data.shape[0])
-            excerpt = slice(start_idx, end_idx)
-            yield data[excerpt], labels[excerpt]
-
     def train(self, data: ndarray, labels: ndarray, epochs: int):
         loss_per_epoch = []
         best_loss = np.inf
