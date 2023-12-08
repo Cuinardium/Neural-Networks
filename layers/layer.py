@@ -1,6 +1,5 @@
 # Abstract class layer
 from abc import ABC, abstractmethod
-from typing import Tuple
 from numpy import ndarray
 
 class Layer(ABC):
@@ -18,5 +17,5 @@ class Layer(ABC):
         pass
 
     @abstractmethod
-    def get_output_shape(self) -> Tuple:
+    def get_output_shape(self):
         pass

@@ -55,6 +55,20 @@ class Tanh(ActivationFunction):
     def derivative(self, x: ndarray):
         return self.beta * (1 - self.call(x) ** 2)
 
+# ----- Softmax -----
+class Softmax(ActivationFunction):
+    def __init__(self):
+        super().__init__()
+
+    def call(self, x: ndarray):
+        # Avoid overflow
+        max_x = np.max(x)
+        exp_x = np.exp(x - max_x)
+        return exp_x / np.sum(exp_x)
+
+    def derivative(self, x: ndarray):
+        return self.call(x) * (1 - self.call(x))
+
 
 def get_act_func(config):
     act_func = config["type"]
@@ -66,5 +80,7 @@ def get_act_func(config):
         return Sigmoid(beta)
     elif act_func == "tanh":
         return Tanh(beta)
+    elif act_func == "softmax":
+        return Softmax()
     else:
         raise Exception("Activation function not found")
