@@ -6,23 +6,15 @@ from numpy import ndarray
 
 from layers.layer import Layer
 from layers.convolutional import Convolutional
+from networks.utils.loss import LossFunction
 
 
 class CNN:
-    def cross_entropy_loss(self, predicted: ndarray, actual: ndarray):
-        predicted = np.clip(predicted, 1e-15, 1 - 1e-15)  # Evito log(0)
-        loss = -np.sum(
-            actual * np.log(predicted) + (1 - actual) * np.log(1 - predicted)
-        ) / len(predicted)
-        return loss
-
-    def cross_entropy_loss_gradient(self, predicted: ndarray, actual: ndarray):
-        predicted = np.clip(predicted, 1e-15, 1 - 1e-15)  # Evito division por 0
-        return (predicted - actual) / (predicted * (1 - predicted)) / len(predicted)
-
-    def __init__(self, layers: List[Layer], input_shape: Tuple):
+    def __init__(self, layers: List[Layer], input_shape: Tuple, loss_function: LossFunction):
         # Aca van las layers, pueden ser convolucionales, pooling, fully connected, softmax, etc
         self.layers = layers
+
+        self.loss_function = loss_function
 
         # Inicializo las layers
         for layer in self.layers:
@@ -53,20 +45,17 @@ class CNN:
 
             print(f"Starting epoch {epoch + 1}")
 
-
-            for i, sample, label in zip(
-                range(len(data)), data, labels
-            ):
+            for i, sample, label in zip(range(len(data)), data, labels):
                 sample = np.array([sample])
                 output = self.forward_prop(sample)
 
-                loss = self.cross_entropy_loss(output, label)
+                loss = self.loss_function.call(output, label)
                 losses.append(loss)
 
                 print(f"{i + 1}/{len(data)}", end="\r")
 
                 # Para backprop
-                loss_gradient = self.cross_entropy_loss_gradient(output, label)
+                loss_gradient = self.loss_function.derivative(output, label)
                 self.back_prop(loss_gradient)
 
             loss = np.mean(losses)

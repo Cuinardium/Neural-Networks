@@ -2,6 +2,7 @@ import json
 import time
 
 from networks.cnn import CNN
+from networks.utils.loss import CrossEntropy
 from utils.dataset_loader import load_dataset
 from layers.convolutional import Convolutional
 from layers.pooling import Pooling
@@ -55,6 +56,7 @@ def main():
                 FullyConnected(1, activation_function, get_optimization_method(config["optimizer"])),
             ],
             data_shape,
+            CrossEntropy(),
         )
 
     print("Starting training")

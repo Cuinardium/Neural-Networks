@@ -1,5 +1,6 @@
 from networks.cnn import CNN
-from utils.dataset_loader import load_dataset
+from networks.utils.loss import CrossEntropy
+from utils.dataset_loader import load_shapes_dataset
 from layers.convolutional import Convolutional
 from layers.flatten import Flatten
 from layers.fully_connected import FullyConnected
@@ -23,7 +24,7 @@ import multiprocessing
 
 
 def architecture_test():
-    training_data, training_labels, test_data, test_labels = load_dataset()
+    training_data, training_labels, test_data, test_labels = load_shapes_dataset()
     data_shape = np.array([training_data[0]]).shape
     print(data_shape)
 
@@ -53,6 +54,7 @@ def architecture_test():
                         ),
                     ],
                     data_shape,
+                    CrossEntropy(),
                 )
                 for _ in range(iterations)
             ],
@@ -76,6 +78,7 @@ def architecture_test():
                         ),
                     ],
                     data_shape,
+                    CrossEntropy(),
                 )
                 for _ in range(iterations)
             ],
