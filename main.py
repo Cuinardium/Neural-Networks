@@ -1,7 +1,7 @@
 import json
 import time
 
-from cnn import CNN
+from networks.cnn import CNN
 from utils.dataset_loader import load_dataset
 from layers.convolutional import Convolutional
 from layers.pooling import Pooling
