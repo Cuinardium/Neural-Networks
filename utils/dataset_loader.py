@@ -2,14 +2,8 @@ import cv2
 import numpy as np
 import os
 
-# TODO check if we have to set the cwd
-# parameters
-img_size = 200  # TODO check this
-train_ratio = 0.8  # TODO check this
-samples_per_class = 100  # TODO check this
 
-
-def load_dataset(img_size=img_size, train_ratio=train_ratio, samples_per_class=samples_per_class):
+def load_shapes_dataset(img_size=200, train_ratio=0.8, samples_per_class=100):
     folders = ["data/shapes/square", "data/shapes/triangle"]
     labels = []
     images = []
@@ -46,13 +40,26 @@ def load_dataset(img_size=img_size, train_ratio=train_ratio, samples_per_class=s
 
     print(f"There are {sqare_qty} squares and {triangle_qty} triangles")
 
-    train_images = images[:square_train_qty] + images[samples_per_class : samples_per_class + triangle_train_qty]
-    train_labels = labels[:square_train_qty] + labels[samples_per_class : samples_per_class + triangle_train_qty]
-    test_images = images[square_train_qty : samples_per_class] + images[samples_per_class + triangle_train_qty :]
-    test_labels = labels[square_train_qty : samples_per_class] + labels[samples_per_class + triangle_train_qty :]
+    train_images = (
+        images[:square_train_qty]
+        + images[samples_per_class : samples_per_class + triangle_train_qty]
+    )
+    train_labels = (
+        labels[:square_train_qty]
+        + labels[samples_per_class : samples_per_class + triangle_train_qty]
+    )
+    test_images = (
+        images[square_train_qty:samples_per_class]
+        + images[samples_per_class + triangle_train_qty :]
+    )
+    test_labels = (
+        labels[square_train_qty:samples_per_class]
+        + labels[samples_per_class + triangle_train_qty :]
+    )
 
-    print(f"There are {len(train_images)} training images and {len(test_images)} testing images")
-
+    print(
+        f"There are {len(train_images)} training images and {len(test_images)} testing images"
+    )
 
     # Training set first
     train_images = np.array(train_images)
@@ -68,3 +75,116 @@ def load_dataset(img_size=img_size, train_ratio=train_ratio, samples_per_class=s
     test_labels = np.array(test_labels)
 
     return train_images, train_labels, test_images, test_labels
+
+# TODO: parametrize noise
+def load_digits_dataset():
+    digits = [
+        [
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 1.0, 1.0],
+            [1.0, 0.0, 1.0, 0.0, 1.0],
+            [1.0, 1.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+        ],
+        [
+            [0.0, 0.0, 1.0, 0.0, 0.0],
+            [0.0, 1.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0, 0.0],
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+        ],
+        [
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0, 0.0],
+            [1.0, 1.0, 1.0, 1.0, 1.0],
+        ],
+        [
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 1.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+        ],
+        [
+            [0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0, 1.0, 0.0],
+            [0.0, 1.0, 0.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 1.0, 0.0],
+            [1.0, 1.0, 1.0, 1.0, 1.0],
+            [0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0, 0.0],
+        ],
+        [
+            [1.0, 1.0, 1.0, 1.0, 1.0],
+            [1.0, 0.0, 0.0, 0.0, 0.0],
+            [1.0, 1.0, 1.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+        ],
+        [
+            [0.0, 0.0, 1.0, 1.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 0.0],
+            [1.0, 1.0, 1.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+        ],
+        [
+            [1.0, 1.0, 1.0, 1.0, 1.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0, 0.0],
+        ],
+        [
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+        ],
+        [
+            [0.0, 1.0, 1.0, 1.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [1.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 1.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 1.0, 1.0, 0.0, 0.0],
+        ],
+    ]
+
+    labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    # One-hot encoding
+    labels = [[1 if i == label else 0 for i in range(10)] for label in labels]
+
+    training_set = np.array(digits)
+    training_set = training_set.reshape(training_set.shape[0], -1)
+    training_labels = np.array(labels)
+
+    test_set = training_set.copy()
+    test_labels = training_labels.copy()
+
+    # Add noise to test set
+    for i, sample in enumerate(test_set):
+        noise = np.random.normal(0, 0.1, sample.shape)
+        test_set[i] = np.clip(sample + noise, 0, 1)
+
+    return training_set, training_labels, test_set, test_labels
