@@ -1,4 +1,4 @@
-from cnn import CNN
+from networks.cnn import CNN
 from utils.dataset_loader import load_dataset
 from layers.convolutional import Convolutional
 from layers.flatten import Flatten
