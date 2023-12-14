@@ -3,12 +3,11 @@ import time
 
 from networks.cnn import CNN
 from networks.utils.loss import CrossEntropy
-from utils.dataset_loader import load_dataset
+from utils.dataset_loader import load_shapes_dataset
 from layers.convolutional import Convolutional
 from layers.pooling import Pooling
 from layers.flatten import Flatten
 from layers.fully_connected import FullyConnected
-from layers.softmax import SM
 from layers.relu import Relu
 import numpy as np
 from layers.utils.activation_functions import get_act_func
@@ -30,7 +29,7 @@ def main():
 
         print("Loading dataset")
 
-        training_data, training_labels, test_data, test_labels = load_dataset()
+        training_data, training_labels, test_data, test_labels = load_shapes_dataset()
 
         data_shape = np.array([training_data[0]]).shape
 
