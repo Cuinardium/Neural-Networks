@@ -3,11 +3,7 @@ from layers.fully_connected import FullyConnected
 from numpy import ndarray
 import copy
 import numpy as np
-from layers.utils.activation_functions import Sigmoid, Softmax
-from layers.utils.optimization_methods import GradientDescent
-from networks.utils.loss import CrossEntropy, LossFunction, MeanSquaredError
-
-from utils.dataset_loader import load_digits_dataset
+from networks.utils.loss import LossFunction
 
 
 class MLP:
@@ -64,5 +60,3 @@ class MLP:
             self = best_model
 
         return loss_per_epoch
-
-

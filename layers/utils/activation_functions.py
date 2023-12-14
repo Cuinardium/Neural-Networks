@@ -70,6 +70,18 @@ class Softmax(ActivationFunction):
         return self.call(x) * (1 - self.call(x))
 
 
+# ----- Identity -----
+class Identity(ActivationFunction):
+    def __init__(self):
+        super().__init__()
+
+    def call(self, x: ndarray):
+        return x
+
+    def derivative(self, x: ndarray):
+        return np.ones_like(x)
+
+
 def get_act_func(config):
     act_func = config["type"]
     beta = config["beta"]
