@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
 
 
 # Create plot dir if it doesn't exist
@@ -41,6 +42,49 @@ def visualize_feature_maps(cnn, data, label=""):
             plt.savefig(f"{plot_dir}/feature_map_{layer_index}_{feature_map_index}_{label}.png")
             plt.clf()
 
+
+def create_image(fonts, label="image", size=(7, 5)):
+    # Add a border around each font, 1 pixel wide
+    fonts = np.pad(fonts, ((0, 0), (1, 1), (1, 1)), "constant", constant_values=0)
+
+    # Scale the fonts up
+    fonts = fonts.repeat(10, axis=1).repeat(10, axis=2)
+
+    bitmap_height, bitmap_width = len(fonts[0]), len(fonts[0][0])
+    cols, rows = size
+    composite_width = cols * bitmap_width
+    composite_height = rows * bitmap_height
+
+    composite_image = Image.new("L", (composite_width, composite_height))
+
+    for i, font in enumerate(fonts):
+        font_image = Image.fromarray(font * 255)
+        x = i % cols
+        y = i // cols
+        composite_image.paste(font_image, (x * bitmap_width, y * bitmap_height))
+
+    # Add a border around each image
+
+    composite_image.save(f"{plot_dir}/{label}.png")
+
+
+def plot_latent_space(
+    latent_space, labels, path="latent_space.png"
+):
+    latent_space = np.array(latent_space)
+
+    plt.scatter(latent_space[:, 0], latent_space[:, 1], s=1)
+    
+    # Label each point with the corresponding label
+    for i, label in enumerate(labels):
+        plt.annotate(label, (latent_space[i, 0], latent_space[i, 1]))
+
+    plt.title("Latent Space")
+    plt.xlabel("z1")
+    plt.ylabel("z2")
+
+    plt.savefig(f"{plot_dir}/{path}")
+    plt.clf()
 
 def plot_errors_per_architecture(
     errors_per_architecture: dict[str, tuple[float, float]],
