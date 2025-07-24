@@ -39,7 +39,9 @@ def visualize_feature_maps(cnn, data, label=""):
             plt.imshow(feature_map, cmap="gray")
             plt.title(f"CNN Feature Map Visualization {label}")
             plt.colorbar()
-            plt.savefig(f"{plot_dir}/feature_map_{layer_index}_{feature_map_index}_{label}.png")
+            plt.savefig(
+                f"{plot_dir}/feature_map_{layer_index}_{feature_map_index}_{label}.png"
+            )
             plt.clf()
 
 
@@ -58,7 +60,8 @@ def create_image(fonts, label="image", size=(7, 5)):
     composite_image = Image.new("L", (composite_width, composite_height))
 
     for i, font in enumerate(fonts):
-        font_image = Image.fromarray(font * 255)
+        # Convertimos a float para evitar overflow, luego a uint8 para imagen
+        font_image = Image.fromarray((font.astype(np.float32) * 255).astype(np.uint8))
         x = i % cols
         y = i // cols
         composite_image.paste(font_image, (x * bitmap_width, y * bitmap_height))
@@ -68,13 +71,11 @@ def create_image(fonts, label="image", size=(7, 5)):
     composite_image.save(f"{plot_dir}/{label}.png")
 
 
-def plot_latent_space(
-    latent_space, labels, path="latent_space.png"
-):
+def plot_latent_space(latent_space, labels, path="latent_space.png"):
     latent_space = np.array(latent_space)
 
     plt.scatter(latent_space[:, 0], latent_space[:, 1], s=1)
-    
+
     # Label each point with the corresponding label
     for i, label in enumerate(labels):
         plt.annotate(label, (latent_space[i, 0], latent_space[i, 1]))
@@ -85,6 +86,7 @@ def plot_latent_space(
 
     plt.savefig(f"{plot_dir}/{path}")
     plt.clf()
+
 
 def plot_errors_per_architecture(
     errors_per_architecture: dict[str, tuple[float, float]],
@@ -101,12 +103,11 @@ def plot_errors_per_architecture(
         capsize=5,
     )
 
-
     plt.xticks(
         [i + 1 for i in range(len(errors_per_architecture))],
         names,
         rotation=45,  # Rotate x-tick labels by 45 degrees
-        ha='right',  # Align rotated labels to the right
+        ha="right",  # Align rotated labels to the right
         fontsize=8,  # Adjust font size
     )
 
@@ -127,6 +128,7 @@ def plot_errors_per_architecture(
 
     plt.savefig(f"{plot_dir}/{path}")
     plt.clf()
+
 
 def plot_errors_per_epoch(errors_per_epoch: list[float]):
     plt.plot(errors_per_epoch)
@@ -159,8 +161,10 @@ def plot_confusion_matrix(predictions: list[tuple[str, str, float, float]]):
         ]
     )
     false_triangles = len(triangle_predictions) - correct_triangles
-    
-    confusion_matrix_2x2 = np.array([[correct_squares, false_squares], [false_triangles, correct_triangles]])
+
+    confusion_matrix_2x2 = np.array(
+        [[correct_squares, false_squares], [false_triangles, correct_triangles]]
+    )
 
     _, ax = plt.subplots()
 
@@ -169,19 +173,29 @@ def plot_confusion_matrix(predictions: list[tuple[str, str, float, float]]):
     for i in range(confusion_matrix_2x2.shape[0]):
         for j in range(confusion_matrix_2x2.shape[1]):
             color = "white" if i == j else "red"
-            ax.text(j, i, str(confusion_matrix_2x2[i, j]), va='center', ha='center', color=color)
+            ax.text(
+                j,
+                i,
+                str(confusion_matrix_2x2[i, j]),
+                va="center",
+                ha="center",
+                color=color,
+            )
 
-    #los verticales osn los verdaderos
-    plt.xticks(np.arange(2), ['Actual Square', 'Actual Triangle'])
+    # los verticales osn los verdaderos
+    plt.xticks(np.arange(2), ["Actual Square", "Actual Triangle"])
     # yticks centrados en el medio de la celda, por eso el 0.5
-    plt.yticks(np.arange(2), ['Predicted Square', 'Predicted Triangle'], rotation=90, va='center', ha='center')
+    plt.yticks(
+        np.arange(2),
+        ["Predicted Square", "Predicted Triangle"],
+        rotation=90,
+        va="center",
+        ha="center",
+    )
 
-
-
-    
     plt.colorbar(cax)
 
-    plt.title('Confusion Matrix')
+    plt.title("Confusion Matrix")
 
     plt.savefig(f"{plot_dir}/confusion_matrix.png")
     plt.clf()

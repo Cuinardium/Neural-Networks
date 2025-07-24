@@ -291,10 +291,25 @@ def load_emoji_data():
         [0x3C, 0x42, 0xA1, 0xA5, 0x81, 0x9D, 0x42, 0x3C],  # ?|
     ]
 
+    labels = [
+        ":D",
+        ":(",
+        ":x",
+        ":)",
+        ";|",
+        ":O",
+        ":P",
+        "X|",
+        ":|",
+        "^|",
+        "V|",
+        "?|"
+    ]
+
     emoji_matrix = np.zeros((len(emojis), 8, 8), dtype=np.int8)
     for i, char in enumerate(emojis):
         for j, row in enumerate(char):
             for k in range(8):
                 emoji_matrix[i, j, k] = (row >> (7 - k)) & 0x01
 
-    return emoji_matrix
+    return emoji_matrix, labels
